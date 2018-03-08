@@ -17,7 +17,6 @@ def hough_transform(img):
 
     lines = cv2.HoughLines(edges, 1, np.pi / 180, 200)  # Hough line detection
     hough_lines = []
-    print(lines, "this is lines")
     # Lines are represented by rho, theta; convert to endpoint notation
     if lines is not None:
         for line in lines:
