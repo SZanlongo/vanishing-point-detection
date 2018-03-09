@@ -17,21 +17,21 @@ def hough_transform(img):
 
     lines = cv2.HoughLines(edges, 1, np.pi / 180, 200)  # Hough line detection
     hough_lines = []
-
     # Lines are represented by rho, theta; convert to endpoint notation
-    for line in lines:
-        for rho, theta in line:
-            a = np.cos(theta)
-            b = np.sin(theta)
-            x0 = a * rho
-            y0 = b * rho
-            x1 = int(x0 + 1000 * (-b))
-            y1 = int(y0 + 1000 * (a))
-            x2 = int(x0 - 1000 * (-b))
-            y2 = int(y0 - 1000 * (a))
+    if lines is not None:
+        for line in lines:
+            for rho, theta in line:
+                a = np.cos(theta)
+                b = np.sin(theta)
+                x0 = a * rho
+                y0 = b * rho
+                x1 = int(x0 + 1000 * (-b))
+                y1 = int(y0 + 1000 * (a))
+                x2 = int(x0 - 1000 * (-b))
+                y2 = int(y0 - 1000 * (a))
 
-            cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
-            hough_lines.append(((x1, y1), (x2, y2)))
+                cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+                hough_lines.append(((x1, y1), (x2, y2)))
 
     # cv2.imwrite('../pictures/output/hough.jpg', img)
     return hough_lines
@@ -67,9 +67,9 @@ def line_intersection(line1, line2):
 # Find intersections between multiple lines (not line segments!)
 def find_intersections(lines, img):
     intersections = []
-    for i in xrange(len(lines)):
+    for i in range(len(lines)):
         line1 = lines[i]
-        for j in xrange(i + 1, len(lines)):
+        for j in range(i + 1, len(lines)):
             line2 = lines[j]
 
             if not line1 == line2:
@@ -97,10 +97,10 @@ def find_vanishing_point(img, grid_size, intersections):
 
     # Current cell with most intersection points
     max_intersections = 0
-    best_cell = None
+    best_cell = (0.0, 0.0)
 
-    for i in xrange(grid_rows):
-        for j in xrange(grid_columns):
+    for i in range(grid_rows):
+        for j in range(grid_columns):
             cell_left = i * grid_size
             cell_right = (i + 1) * grid_size
             cell_bottom = j * grid_size
@@ -116,12 +116,12 @@ def find_vanishing_point(img, grid_size, intersections):
             if current_intersections > max_intersections:
                 max_intersections = current_intersections
                 best_cell = ((cell_left + cell_right) / 2, (cell_bottom + cell_top) / 2)
-
-    if not best_cell == [None, None]:
-        rx1 = best_cell[0] - grid_size / 2
-        ry1 = best_cell[1] - grid_size / 2
-        rx2 = best_cell[0] + grid_size / 2
-        ry2 = best_cell[1] + grid_size / 2
+                print(best_cell, "this best cell")
+    if best_cell[0] != None and best_cell[1] != None:
+        rx1 = int(best_cell[0] - grid_size / 2)
+        ry1 = int(best_cell[1] - grid_size / 2)
+        rx2 = int(best_cell[0] + grid_size / 2)
+        ry2 = int(best_cell[1] + grid_size / 2)
         cv2.rectangle(img, (rx1, ry1), (rx2, ry2), (0, 255, 0), 10)
         # cv2.imwrite('../pictures/output/center.jpg', img)
 
