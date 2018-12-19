@@ -13,6 +13,7 @@ def hough_transform(img):
 
     opening = cv2.morphologyEx(gray, cv2.MORPH_OPEN, kernel)  # Open (erode, then dilate)
     edges = cv2.Canny(opening, 50, 150, apertureSize=3)  # Canny edge detection
+    cv2.imwrite('../pictures/output/canny.jpg', edges)
     lines = cv2.HoughLines(edges, 1, np.pi / 180, 200)  # Hough line detection
 
     hough_lines = []
@@ -21,6 +22,10 @@ def hough_transform(img):
         for line in lines:
             hough_lines.extend(list(starmap(endpoints, line)))
 
+    for line in hough_lines:
+        cv2.line(img, line[0], line[1], (0, 0, 255), 2)
+
+    cv2.imwrite('../pictures/output/hough.jpg', img)
     return hough_lines
 
 
