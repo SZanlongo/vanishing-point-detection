@@ -91,7 +91,7 @@ def find_vanishing_point(img, grid_size, intersections):
     max_intersections = 0
     best_cell = (0.0, 0.0)
 
-    for i, j in itertools.product(range(grid_rows), range(grid_columns)):
+    for i, j in itertools.product(range(grid_columns),range(grid_rows)):
         cell_left = i * grid_size
         cell_right = (i + 1) * grid_size
         cell_bottom = j * grid_size
